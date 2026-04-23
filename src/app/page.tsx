@@ -1,7 +1,14 @@
+import Quiz from "@/components/Quiz";
+
+export const metadata = {
+  title: "Personalized Health Protocol Quiz",
+  description: "Discover your optimal protocol management style.",
+};
+
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <h1 className="text-2xl font-bold">Health Protocol Quiz</h1>
-    </div>
+    <main className="min-h-screen bg-black">
+      <Quiz />
+    </main>
   );
 }
