@@ -4,7 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronRight, CheckCircle2, Loader2 } from "lucide-react";
 import { questions } from "@/data/quiz";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
+import { sendQuizResultEmail } from "@/actions/sendEmail";
 
 export default function Quiz() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -54,7 +55,7 @@ export default function Quiz() {
     const redirectUrl = countA >= 5 ? "https://go.fnnlx.com/portfolio" : "https://go.fnnlx.com/launch";
     
     try {
-      const { error } = await supabase
+      const { error } = await getSupabase()
         .from('quiz_leads')
         .insert([{
           lead_name: name,
@@ -74,6 +75,13 @@ export default function Quiz() {
         }]);
 
       if (error) throw error;
+
+      // Trigger the automated email
+      await sendQuizResultEmail({
+        name,
+        email,
+        resultType: calculatedResult,
+      });
 
       // Move to result screen momentarily while the browser redirects
       setResult(calculatedResult);
